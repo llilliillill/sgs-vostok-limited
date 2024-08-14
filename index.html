@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selects</title>
+</head>
+<body>
+
+<!-- Город  -->
+<select id="city"></select>
+
+<!-- Цех -->
+<select id="workshop"></select>
+
+<!-- Сотрудник -->
+<select id="employee"></select>
+
+<!-- Бригада -->
+<select id="brigade">
+    <option value="0">Бригада</option>
+    <option value="Первая Бригада">Первая Бригада</option>
+    <option value="Вторая Бригада">Вторая Бригада</option>
+    <option value="Третья Бригада">Третья Бригада</option>
+    <option value="Четвертая Бригада">Четвертая Бригада</option>
+    <option value="Пятая Бригада">Пятая Бригада</option>
+</select>
+
+<!-- Смена -->
+<select id="workshift">
+    <option value="0">Смена</option>
+    <option value="Дневнвя">Дневнвя</option>
+    <option value="Ночная">Ночная</option>
+</select>
+
+<button id="save">save cookies</button>
+
+<script>
+    const select_city = document.querySelector('#city')
+    const select_workshop = document.querySelector('#workshop')
+    const select_employee = document.querySelector('#employee')
+    const select_brigade = document.querySelector('#brigade')
+    const select_workshift = document.querySelector('#workshift')
+
+    const city = [
+        { id: 0, name: 'Город' },
+        { id: 1, name: 'Москва' },
+        { id: 2, name: 'Санкт-Петербург' },
+        { id: 3, name: 'Самара' },
+        { id: 4, name: 'Екатеринбург' },
+        { id: 5, name: 'Ростов-на-Дону' }
+    ]
+
+    const workshop = [
+        { id: 0, name: 'Цех' },
+        { id: 1, name: 'Сталелитейный цех', link: 1 },
+        { id: 2, name: 'Сборочный цех', link: 1 },
+        { id: 3, name: 'Покрасочный цех', link: 2 },
+        { id: 4, name: 'Машиностроительный цех', link: 2 },
+        { id: 5, name: 'Станкостроительный цех', link: 3 },
+        { id: 6, name: 'Сверлильный цех', link: 3 },
+        { id: 7, name: 'Пилильный цех', link: 4 },
+        { id: 8, name: 'Пивной цех', link: 4 },
+        { id: 9, name: 'Танкостроительный цех', link: 5 },
+        { id: 10, name: 'Самолетостроительный цех', link: 5 }
+    ]
+
+    const employee = [
+        { id: 0, name: 'Сотрудник' },
+        { id: 1, name: 'Иванов Иван Иванович', link: 1 },
+        { id: 2, name: 'Петров Петр Петрович', link: 2 },
+        { id: 3, name: 'Воробьев Стас Максимович', link: 2 },
+        { id: 4, name: 'Семенов Александр Федорович', link: 3 },
+        { id: 5, name: 'Соколов Владимир Иванович', link: 3 },
+        { id: 6, name: 'Павлов Олег Юрьевич', link: 3 },
+        { id: 7, name: 'Михалков Михаил Михалыч', link: 4 },
+        { id: 8, name: 'Ковалев Никита Петрович', link: 5 },
+        { id: 9, name: 'Сорокин Матвей Степанович', link: 5 },
+        { id: 10, name: 'Мамедов Виктор Петрович', link: 5 },
+        { id: 11, name: 'Королев Александр Иванович', link: 6 },
+        { id: 12, name: 'Панкратов Григорий Никитович', link: 6 },
+        { id: 13, name: 'Васельков Марат Игоревич', link: 7 },
+        { id: 14, name: 'Бублик Глеб Петрович', link: 7 },
+        { id: 14, name: 'Пупкин Людовик Четвертый', link: 8 },
+        { id: 15, name: 'Семёнов Генадий Федорович', link: 8 },
+        { id: 16, name: 'Мамкин Данил Иванович', link: 9 },
+        { id: 17, name: 'Сеченов Антон Юрьевич', link: 10 }
+    ]
+
+    function sort(array, value, select) {
+        let result = ''
+        for (let i=0; i<array.length; i++) {
+            if (value > 0) {
+                if (array[i].link == value || array[i].id == 0) {
+                    result += `
+                        <option value="${ array[i].id }">
+                            ${ array[i].name }
+                        </option>
+                    `
+                }
+            } else {
+                result += `
+                    <option value="${ array[i].id }">
+                        ${ array[i].name }
+                    </option>
+                `
+            }
+        }
+        select.innerHTML = result
+    }
+
+    function getSelectValueById(array, id) {
+        return array.filter(item => item.id == id)[0].name
+    }
+
+    /* Инициализируем селекты */
+    sort(city, 0, select_city)
+    sort(workshop, 0, select_workshop)
+    sort(employee, 0, select_employee)
+
+    select_city.onchange = () => {
+        sort(workshop, select_city.value, select_workshop)
+        sort(employee, select_employee.value, select_employee)
+    } 
+
+    select_workshop.onchange = () => {
+        sort(employee, select_workshop.value, select_employee)
+    } 
+
+    /* Сохранить cookies */
+    document.querySelector('#save').onclick = () => {
+        let obj = {}
+
+        if (select_city.value != 0)
+            obj.city = getSelectValueById(city, select_city.value);
+
+        if (select_workshop.value != 0) 
+            obj.workshop = getSelectValueById(workshop, select_workshop.value);
+
+        if (select_employee.value != 0)
+            obj.employee = getSelectValueById(employee, select_employee.value);
+
+        if (select_brigade.value != 0)
+            obj.brigade = select_brigade.value;
+
+        if (select_workshift.value != 0)
+            obj.workshift = select_workshift.value;
+
+        /* Сохранить cookies */
+        document.cookie = `filter=${ JSON.stringify(obj) }; path=/; expires=30`
+    }
+</script>
+
+</body>
+</html>
